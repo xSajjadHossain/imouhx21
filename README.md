@@ -74,3 +74,10 @@ sysupgrade -n /tmp/openwrt-mediatek-filogic-imou_hx21-squashfs-sysupgrade.itb
 ```
 
 Once the router reboots, you are permanently running OpenWrt on your IMOU HX21.
+
+---
+
+## Post-Install Network Configuration & Tuning
+After flashing, we performed an extensive sysadmin-level configuration of the router, including NextDNS setup, LuCI SSL certificates, SQM Bufferbloat tuning for PPPoE, and Wi-Fi DFS channel architecture.
+
+**For a complete summary of the network optimizations, read [CONFIGURATION_JOURNEY.md](CONFIGURATION_JOURNEY.md).**
