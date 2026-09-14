@@ -106,3 +106,28 @@ Bypassing CGNAT meant our OpenWrt login screen was now exposed to the entire pub
 We immediately deployed a **Cloudflare Access Application** over the tunnel. Now, before anyone can even see the OpenWrt login screen, they are intercepted at Cloudflare's edge and forced to authenticate via an **Email OTP (One-Time Password)**. 
 
 The router is now invincible, highly tuned, and accessible from anywhere in the world.
+
+---
+
+## Phase 8: Hardware Validation (iperf3)
+
+We needed to prove that the router's MediaTek Filogic CPU and the local ethernet cables were genuinely capable of Gigabit wire speeds without bottlenecking.
+
+**The Setup (Router as Server):**
+We installed the `iperf3` package on the OpenWrt router to act as the speed test server.
+```bash
+apk add iperf3
+```
+Then, we started the iperf3 server daemon on the router, telling it to listen on the default port:
+```bash
+iperf3 -s
+```
+
+**The Test (Mac as Client):**
+On the M1 Mac (connected via Gigabit Ethernet to the router's LAN port), we ran the iperf3 client command to blast the router with TCP traffic for 10 seconds:
+```bash
+iperf3 -c 192.168.1.1
+```
+
+**The Results:**
+The test pushed a perfectly stable **937 Mbits/sec** with **0 TCP Retries**. This mathematically proved that our local hardware, cables, and the router's CPU switching capacity are in pristine condition and fully capable of handling 1 Gbps fiber connections in the future.
