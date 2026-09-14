@@ -131,3 +131,19 @@ iperf3 -c 192.168.1.1
 
 **The Results:**
 The test pushed a perfectly stable **937 Mbits/sec** with **0 TCP Retries**. This mathematically proved that our local hardware, cables, and the router's CPU switching capacity are in pristine condition and fully capable of handling 1 Gbps fiber connections in the future.
+
+---
+
+## Phase 9: The Snapshot Trap & Moving to Stable
+
+**The Disaster:** On Sept 14, 2026, an attempt was made to install `luci-theme-fluent` using a third-party `install.sh` script. Because the router was running a bleeding-edge OpenWrt Snapshot, the `apk add` command aggressively pulled the absolute latest core libraries (like `ucode`) from the remote repository.
+
+**The Crash:** Injecting today's `ucode` binaries into last week's Snapshot firmware caused a fatal ABI mismatch. The network daemon (`netifd`) crashed, killing Wi-Fi, dropping the LAN, and soft-bricking the router.
+
+**The Recovery:**
+1. The WAN cable to the ONU was physically disconnected to blind the ISP and prevent a permanent MAC block.
+2. The router was hardware-reset (`firstboot -y && reboot`), destroying the corrupted `/overlay` partition and returning it to a clean state.
+3. A full configuration backup (`.tar.gz`) was restored via the LuCI web interface.
+
+**The Permanent Fix (Moving to Stable):**
+To prevent this from ever happening again, the router was upgraded from the volatile Snapshot branch to the **OpenWrt 25.12.5 Stable Release** using a `sysupgrade` image. On the Stable branch, core libraries are frozen, meaning packages and themes can be safely installed without risking catastrophic system mismatches.
