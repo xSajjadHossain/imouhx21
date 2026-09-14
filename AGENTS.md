@@ -18,8 +18,10 @@ This file contains critical context, sysadmin guidelines, and strict rules for a
 - **SQM (cake):** Configured on `pppoe-wan`. 
   - Upload is hard-capped at 65000 Kbps (to fix bufferbloat).
   - Download is set to `0` (unshaped) to allow unthrottled Gigabit speeds for local BDIX/Google Global Cache traffic.
-- **DNS:** NextDNS is configured at the router level via `dnsmasq`.
-- **Zero Trust:** Cloudflare Tunnel is running but needs an Email OTP policy configured.
+- **DNS (Cloudflare Zero Trust):** Replaced NextDNS with Cloudflare Gateway DoH (via `https-dns-proxy` on `127.0.0.1#5053`).
+  - **Leak Prevention:** `noresolv='1'` is set in `dhcp.@dnsmasq[0]` to strictly ignore the ISP's DNS.
+  - **DNS Hijack (Network Fortress):** A firewall redirect rule (`Intercept-DNS`) intercepts all LAN traffic on `tcp/udp` port 53 across **both IPv4 and IPv6** (`family='any'`), aggressively DNAT-ing it to the router. This prevents devices (like iPhones, Smart TVs, or hardcoded IoTs) from bypassing the Cloudflare adblocker.
+- **Zero Trust Access:** Cloudflare Tunnel is running but needs an Email OTP policy configured.
 
 ## 4. Disaster Recovery Procedure
 If the router is ever soft-bricked (kernel alive, network dead), instruct Sajjad to follow this exact procedure:
